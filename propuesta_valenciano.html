@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Per a Marieta</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --cream: #FBF6EF;
+    --ink: #2E2A26;
+    --terra: #C8744A;
+    --olive: #6B7A4F;
+    --gold: #D9A441;
+    --soft-line: rgba(46,42,38,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+  }
+
+  .screen {
+    display: none;
+    animation: fadeUp 0.6s ease both;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 500;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    background: var(--terra);
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1.15;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  p.body-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink);
+    opacity: 0.88;
+    margin-bottom: 16px;
+  }
+
+  .counter-row {
+    display: flex;
+    gap: 14px;
+    margin: 26px 0 30px;
+  }
+  .counter {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--soft-line);
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .counter .num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--terra);
+    display: block;
+    line-height: 1;
+  }
+  .counter .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+    margin-top: 6px;
+    display: block;
+  }
+
+  .btn {
+    width: 100%;
+    border: none;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 17px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease;
+    letter-spacing: 0.01em;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:hover { background: var(--terra); }
+
+  .btn-final {
+    background: var(--terra);
+  }
+  .btn-final:hover { background: var(--ink); }
+
+  /* Screen 2: warnings */
+  .warn-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 28px 0 32px;
+  }
+  .warn-item {
+    background: #fff;
+    border: 1px solid var(--soft-line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .warn-icon {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--olive);
+    flex-shrink: 0;
+    width: 26px;
+    text-align: center;
+  }
+  .warn-text {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .warn-text b { color: var(--terra); font-weight: 600; }
+
+  /* Screen 3 */
+  .final-q {
+    text-align: center;
+    margin-top: 8px;
+  }
+  .final-q h1 {
+    text-align: center;
+  }
+
+  .heart-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 20px 0 30px;
+    font-size: 22px;
+    color: var(--terra);
+    opacity: 0.7;
+  }
+
+  /* confetti */
+  .confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 50;
+  }
+  .confetti {
+    position: absolute;
+    top: -10px;
+    border-radius: 2px;
+    opacity: 0.9;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(540deg); opacity: 0.3; }
+  }
+
+  .yes-screen {
+    text-align: center;
+    display: none;
+  }
+  .yes-screen.active { display: block; }
+  .yes-screen h1 {
+    text-align: center;
+    color: var(--terra);
+  }
+  .yes-screen p {
+    text-align: center;
+  }
+
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 36px;
+  }
+  .progress span {
+    height: 3px;
+    flex: 1;
+    background: var(--soft-line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress span.done { background: var(--terra); }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- SCREEN 0 -->
+  <div class="screen active" id="screen0">
+    <div class="progress"><span></span><span></span><span></span><span></span></div>
+    <div class="eyebrow">Marieta</div>
+    <h1>Hola, et recordes de quant de temps portem quedant?</h1>
+    <div style="display:flex; justify-content:center; margin-top:30px;">
+      <button class="btn" style="max-width:220px;" onclick="goTo(1)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 -->
+  <div class="screen" id="screen1">
+    <div class="progress"><span class="done"></span><span class="done"></span><span></span><span></span></div>
+    <div class="eyebrow">Marieta</div>
+    <h1>Han passat 2 mesos i 5 dies des que ens vam conèixer.</h1>
+    <p class="body-text">Des d'aleshores hem tingut 11 cites, cada una millor que l'anterior. I per això volia preguntar-te una cosa.</p>
+
+    <div class="counter-row">
+      <div class="counter">
+        <span class="num">2m 5d</span>
+        <span class="lbl">Junts</span>
+      </div>
+      <div class="counter">
+        <span class="num">11</span>
+        <span class="lbl">Cites</span>
+      </div>
+    </div>
+
+    <p class="body-text" style="font-weight:500;">M'agradaria saber si voldries ser oficialment la meua "amiga". Però abans d'acceptar, hi ha unes advertències que hauries de tindre en compte.</p>
+
+    <button class="btn" onclick="goTo(2)">Veure advertències →</button>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div class="screen" id="screen2">
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+    <div class="eyebrow">Abans de dir que sí</div>
+    <h1 style="font-size:28px;">Advertències oficials</h1>
+
+    <div class="warn-list" id="warnList">
+      <div class="warn-item" style="animation-delay:0.05s">
+        <span class="warn-icon">①</span>
+        <span class="warn-text"><b>Insomni recurrent</b> — per passar-te la nit "parlant" o pensant en mi.</span>
+      </div>
+      <div class="warn-item" style="animation-delay:0.15s">
+        <span class="warn-icon">②</span>
+        <span class="warn-text"><b>Ganes incontrolables de viatjar</b> — perquè amb mi voldràs veure mig món.</span>
+      </div>
+      <div class="warn-item" style="animation-delay:0.25s">
+        <span class="warn-icon">③</span>
+        <span class="warn-text"><b>Addicció als plans de cap de setmana</b> — rutes, escapades i gelats sense parar.</span>
+      </div>
+      <div class="warn-item" style="animation-delay:0.35s">
+        <span class="warn-icon">④</span>
+        <span class="warn-text"><b>Síndrome de "et trobo a faltar"</b> — símptoma freqüent entre setmana.</span>
+      </div>
+      <div class="warn-item" style="animation-delay:0.45s">
+        <span class="warn-icon">⑤</span>
+        <span class="warn-text"><b>Risc d'aguantar-me</b> — durant molt de temps, si tot continua així.</span>
+      </div>
+    </div>
+
+    <button class="btn" onclick="goTo(3)">Següent →</button>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div class="screen final-q" id="screen3">
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
+    <div class="heart-row">♥ ♥ ♥</div>
+    <h1>Llavors, què respons?</h1>
+    <p class="body-text" style="text-align:center; margin-bottom:30px;">Ja coneixes els riscos. La decisió és teua.</p>
+    <button class="btn btn-final" onclick="sayYes()">Sí, vull</button>
+    <button class="btn" style="margin-top:12px; background:transparent; color: var(--ink); border: 1px solid var(--soft-line);" onclick="goTinder()">Torna a Tinder</button>
+    <p id="errorMsg" style="display:none; color:var(--terra); font-size:14px; text-align:center; margin-top:14px; font-weight:500;">Error: açò no és una opció vàlida.</p>
+  </div>
+
+  <!-- YES SCREEN -->
+  <div class="yes-screen" id="yesScreen">
+    <div class="eyebrow" style="justify-content:center;">Oficial</div>
+    <h1>María & Raúl</h1>
+    <p class="body-text">Des de hui, oficialment. ♥</p>
+  </div>
+
+</div>
+
+<script>
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + n).classList.add('active');
+}
+
+function goTinder() {
+  document.getElementById('errorMsg').style.display = 'block';
+}
+
+function sayYes() {
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('yesScreen').classList.add('active');
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti-wrap';
+  document.body.appendChild(wrap);
+  const colors = ['#C8744A', '#D9A441', '#6B7A4F', '#2E2A26'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    const size = 6 + Math.random() * 6;
+    c.style.width = size + 'px';
+    c.style.height = size * 0.4 + 'px';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+    c.style.animationDelay = (Math.random() * 0.5) + 's';
+    wrap.appendChild(c);
+  }
+  setTimeout(() => wrap.remove(), 5000);
+}
+</script>
+
+</body>
+</html>
